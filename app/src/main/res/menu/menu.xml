@@ -10,6 +10,8 @@
     <item
         android:id="@+id/nav_vaccination"
         android:title="Vaccination Appointment" />
-
+    <item
+        android:id="@+id/nav_aa"
+        android:title="Contact Us" />
 
 </menu>

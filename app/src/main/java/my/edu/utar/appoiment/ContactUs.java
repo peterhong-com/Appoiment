@@ -2,50 +2,53 @@ package my.edu.utar.appoiment;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+
 import android.widget.Toast;
+
+import my.edu.utar.appoiment.databinding.ActivityContactUsBinding;
+
 
 public class ContactUs extends AppCompatActivity {
 
 
-    EditText editTextSubject,editTextContent,editTextToEmail;
-    Button button;
+    ActivityContactUsBinding binding;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contact_us);
+        binding = ActivityContactUsBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        button = findViewById(R.id.btnSend);
-        editTextContent= findViewById(R.id.content);
-        editTextSubject=findViewById(R.id.subject);
-        editTextToEmail = findViewById(R.id.to_email);
-        button.setOnClickListener(new View.OnClickListener() {
+
+
+        binding.sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String subject, content, to_email;
-                subject = editTextSubject.getText().toString();
-                content = editTextContent.getText().toString();
-                to_email = editTextToEmail.getText().toString();
+                String email=binding.emailAddress.getText().toString();
+                String subject=binding.subject.getText().toString();
+                String message=binding.message.getText().toString();
+                String[] addresses = email.split(",");
 
-                if (subject.equals("") && content.equals("") && to_email.equals("")){
-                    Toast.makeText(ContactUs.this,"All Fields are required" ,Toast.LENGTH_SHORT).show();
-                }else {
-                    sendEmail(subject,content,to_email);
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("mailto:"));
+                intent.putExtra(Intent.EXTRA_EMAIL,addresses);
+                intent.putExtra(Intent.EXTRA_SUBJECT,subject);
+                intent.putExtra(Intent.EXTRA_TEXT,message);
+
+
+                if (intent.resolveActivity(getPackageManager()) != null){
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(ContactUs.this, "Error", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-    }
-
-    public void sendEmail(String subject, String content, String to_email){
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_EMAIL,new String[]{to_email});
-        intent.putExtra(Intent.EXTRA_SUBJECT,subject);
-        intent.putExtra(Intent.EXTRA_TEXT, content);
-        startActivity(Intent.createChooser(intent, "Choose email client: "));
     }
 }

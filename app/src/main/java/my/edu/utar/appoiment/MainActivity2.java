@@ -15,12 +15,15 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.Preference;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -36,6 +39,9 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.models.SlideModel;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
@@ -49,6 +55,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -72,6 +79,26 @@ public class MainActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         drawerLayout = findViewById(R.id.menu);
+
+        ImageSlider imageSlider = findViewById(R.id.imageSlider);
+        ArrayList<SlideModel> slideModels = new ArrayList<>();
+
+        slideModels.add(new SlideModel(R.drawable.news, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.arcturus, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.prevent, ScaleTypes.FIT));
+
+        imageSlider.setImageList(slideModels, ScaleTypes.FIT);
+
+        Button btn = findViewById(R.id.btnLink);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = "https://covid-19.moh.gov.my";
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+            }
+        });
+
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
         notify = findViewById(R.id.switch1);
         text1=findViewById(R.id.textView21);
@@ -248,6 +275,11 @@ public class MainActivity2 extends AppCompatActivity {
                         }
                         else if(item.getItemId()==R.id.nav_vaccination){
                             Intent a =new Intent(getApplicationContext(),MainActivity.class);
+                            startActivity(a);
+                            return true;
+                        }
+                        else if(item.getItemId()==R.id.nav_aa){
+                            Intent a =new Intent(getApplicationContext(),ContactUs.class);
                             startActivity(a);
                             return true;
                         }
